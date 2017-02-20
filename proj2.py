@@ -69,7 +69,7 @@ print("UMSI faculty directory emails\n")
 
 base_url = 'https://www.si.umich.edu'
 base_page='/directory?field_person_firstname_value=&field_person_lastname_value=&rid=4'
-r = requests.get(base_url+base_page)
+r = requests.get(base_url+base_page, headers={'User-Agent': 'SI_CLASS'})
 soup = BeautifulSoup(r.text, "html.parser")
 
 redirect=""
@@ -78,7 +78,7 @@ links=[]
 while(1):
 	try:
 		if(redirect==""):
-			req = requests.get(base_url+base_page)
+			req = requests.get(base_url+base_page, headers={'User-Agent': 'SI_CLASS'})
 			links.append(base_page)
 			soups = BeautifulSoup(req.text, "html.parser")
 			value=soups.find_all("a", { "title" : "Go to next page" })
@@ -88,7 +88,7 @@ while(1):
 
 		else:
 			new_base=redirect
-			nreq = requests.get(base_url+new_base)
+			nreq = requests.get(base_url+new_base, headers={'User-Agent': 'SI_CLASS'})
 			soups = BeautifulSoup(nreq.text, "html.parser")
 			value=soups.find_all("a", { "title" : "Go to next page" })
 			redirect=value[0].get('href')
@@ -101,7 +101,7 @@ while(1):
 email_links=[]
 for pages in links:
 	page_base = pages
-	newreq = requests.get(base_url+page_base)
+	newreq = requests.get(base_url+page_base, headers={'User-Agent': 'SI_CLASS'})
 	soupiee = BeautifulSoup(newreq.text, "html.parser")
 	email_context=soupiee.find_all("div", { "class" : "field-name-contact-details" })
 	for context in email_context:
@@ -109,7 +109,7 @@ for pages in links:
 
 for email_item in email_links:
 	email_base=email_item
-	finalreq=requests.get(base_url+email_base)
+	finalreq=requests.get(base_url+email_base,  headers={'User-Agent': 'SI_CLASS'})
 	soupss = BeautifulSoup(finalreq.text, "html.parser")
 	email=soupss.find_all("div", {"class" : "field-name-field-person-email"})
 	for em in email:
